@@ -24,7 +24,16 @@ export class AppComponent {
 
   message = "Hello Angular!";
   message2 = toSignal(
-    this.http.get('/api/hello').pipe(map((res: any) => {
+    this.http.get('/api/hello').pipe(map((res: unknown) => {
+      if (typeof res !== 'object') {
+        return 'Error: Invalid response';
+      }
+      if (res === null) {
+        return 'Error: Invalid response';
+      }
+      if (!('message' in res) || typeof res.message !== 'string') {
+        return 'Error: Invalid response';
+      }
       return res.message;
     })), {
       initialValue: 'Loading...',

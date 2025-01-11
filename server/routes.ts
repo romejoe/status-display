@@ -1,4 +1,4 @@
-import {Router, Application, Request, Response} from 'express';
+import { Application, Request, Response, Router } from 'express';
 
 // import CatCtrl from './controllers/cat';
 // import UserCtrl from './controllers/user';
@@ -37,7 +37,6 @@ const setRoutes = (app: Application): void => {
   // router.route('/user/:id').get(userCtrl.get);
   // router.route('/user/:id').put(userCtrl.update);
   // router.route('/user/:id').delete(userCtrl.delete);
-
 
 
   // Apply the routes to our application with the prefix /api
