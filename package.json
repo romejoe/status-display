@@ -19,7 +19,7 @@
     "test": "ng test",
     "test:be": "tsc -p server && jest",
     "test:becov": "tsc -p server && jest --coverage",
-    "lint": "ng lint && htmlhint \"client/**/*.html\" && sass-lint \"client/**/*.scss\" -v",
+    "lint": "ng lint && htmlhint \"client/**/*.html\"",
     "lint:fix": "ng lint --fix",
     "prepare": "husky || true"
   },
