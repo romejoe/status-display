@@ -2,7 +2,7 @@ import { Component, computed, effect, ElementRef, viewChild } from '@angular/cor
 
 import ApexCharts from 'apexcharts';
 import { toSignal } from "@angular/core/rxjs-interop";
-import { interval, map, throttleTime } from "rxjs";
+import { interval, map } from "rxjs";
 
 
 @Component({
@@ -35,7 +35,7 @@ export class Graph1Component {
           hollow: {
             size: '50%',
           },
-          track:{
+          track: {
             margin: 2
 
           },
@@ -82,7 +82,7 @@ export class Graph1Component {
   series2 = toSignal(interval(100).pipe(map((i) => i % 100)), {
     initialValue: 0
   });
-  series3 = toSignal(interval(100).pipe(map((i) => (50 + (Math.sin(i)*30)) % 100)), {
+  series3 = toSignal(interval(100).pipe(map((i) => (50 + (Math.sin(i) * 30)) % 100)), {
     initialValue: 0
   });
 
