@@ -6,19 +6,11 @@ import { HttpClient } from "@angular/common/http";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
   standalone: true
 })
 export class AppComponent {
 
-  // } implements AfterViewChecked {
-  //
-  // constructor(public auth: AuthService,
-  //             private changeDetector: ChangeDetectorRef) { }
-  //
-  // // This fixes: https://github.com/DavideViolante/Angular-Full-Stack/issues/105
-  // ngAfterViewChecked(): void {
-  //   this.changeDetector.detectChanges();
-  // }
 
   http = inject(HttpClient);
 
