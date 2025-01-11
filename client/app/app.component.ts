@@ -2,11 +2,15 @@ import { Component, inject } from '@angular/core';
 import { toSignal } from "@angular/core/rxjs-interop";
 import { map } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { Graph1Component } from "./widgets/graph-1/graph-1.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  imports: [
+    Graph1Component
+  ],
   standalone: true
 })
 export class AppComponent {
