@@ -32,7 +32,7 @@ module.exports = tseslint.config(
       ],
       "arrow-spacing": "error",
       "comma-spacing": "error",
-      "indent": ["error", 2],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
       "key-spacing": "error",
       "keyword-spacing": "error",
       "object-curly-spacing": ["error", "always"],

@@ -1,4 +1,5 @@
 import { Application, Request, Response, Router } from 'express';
+import { SysInfoController } from "./SysInfoController";
 
 // import CatCtrl from './controllers/cat';
 // import UserCtrl from './controllers/user';
@@ -18,7 +19,7 @@ const setRoutes = (app: Application): void => {
   const router = Router();
   // const catCtrl = new CatCtrl();
   // const userCtrl = new UserCtrl();
-
+  const sysInfoController = new SysInfoController();
   // Cats
   // router.route('/cats').get(catCtrl.getAll);
   // router.route('/cats/count').get(catCtrl.count);
@@ -28,6 +29,7 @@ const setRoutes = (app: Application): void => {
   // router.route('/cat/:id').delete(catCtrl.delete);
 
   router.route('/hello').get(helloWorld);
+  router.route('/sysinfo').get(sysInfoController.watchItem);
 
   // Users
   // router.route('/login').post(userCtrl.login);
