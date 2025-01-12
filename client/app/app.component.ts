@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from "@angular/core/rxjs-interop";
-import { map } from "rxjs";
+import { interval, map, of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Graph1Component } from "./widgets/graph-1/graph-1.component";
 
@@ -14,6 +14,18 @@ import { Graph1Component } from "./widgets/graph-1/graph-1.component";
   standalone: true
 })
 export class AppComponent {
+
+  seriesA = [
+    interval(1000).pipe(map((i) => i % 100)),
+    interval(100).pipe(map((i) => i % 100)),
+    of(0),
+  ];
+  seriesB = [
+    // interval(100).pipe(map((i) => (50 + (Math.sin(i) * 30)) % 100)),
+    of(75),
+    of(0),
+    of(0),
+  ];
 
 
   http = inject(HttpClient);

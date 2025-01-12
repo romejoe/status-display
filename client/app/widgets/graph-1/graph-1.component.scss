@@ -1,6 +1,7 @@
 :host {
   height: 129px;
   width: 340px;
+
 }
 
 .background {
@@ -10,14 +11,26 @@
   height: 129px;
   width: 340px;
   background: url("client/assets/images/graph-1.png");
-
+  position: relative;
 }
 
 .graph-1 {
-  //background: red;
-  //width: 50px;
-  //height: 50px;
-  position: relative;
-  left: 16px;
-  top: 9px;
+  position: absolute;
+  left: 19px;
+  top: 12px;
 }
+
+.graph-2 {
+  position: absolute;
+  right: 19px;
+  top: 12px;
+}
+
+::ng-deep .radialNormal svg{
+  transform: translateX(2px);
+}
+::ng-deep .radialReversed svg{
+  transform: scale(-1, 1) translateX(2px);
+}
+
+//.radialReversed .apex

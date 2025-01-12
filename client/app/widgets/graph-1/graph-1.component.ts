@@ -1,29 +1,30 @@
-import { Component, computed, effect, ElementRef, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, input, Signal, viewChild } from '@angular/core';
 
 import ApexCharts from 'apexcharts';
-import { toSignal } from "@angular/core/rxjs-interop";
-import { interval, map } from "rxjs";
+import { toObservable, toSignal } from "@angular/core/rxjs-interop";
+import { combineLatest, Observable, of, switchMap } from "rxjs";
 
+function watchSeries(series: Signal<Observable<number>[]>): Observable<number[]> {
+  return toObservable(series).pipe(switchMap((seriesObs) => {
+    return combineLatest(seriesObs);
+  }));
+}
 
-@Component({
-  selector: 'app-graph-1',
-  standalone: true,
-  imports: [],
-  templateUrl: './graph-1.component.html',
-  styleUrl: './graph-1.component.scss'
-})
-export class Graph1Component {
-  graph1 = viewChild<ElementRef<HTMLDivElement>>('graph1');
-  graph1Chart = computed(() => {
-    const graph1 = this.graph1();
-    if (!graph1) {
+const defaultSeriesSignalData = {
+  initialValue: [0]
+};
 
+function toChart(graph$: Signal<ElementRef<HTMLDivElement> | undefined>) {
+  return computed(() => {
+    const graph = graph$();
+    if (!graph) {
       return null;
     }
-    const chart = new ApexCharts(graph1.nativeElement, {
+    const chart = new ApexCharts(graph.nativeElement, {
+      series: [],
       chart: {
-        height: 110,
-        width: 110,
+        height: 105,
+        width: 105,
         type: 'radialBar'
       },
       colors: ['#319A9B'],
@@ -49,64 +50,61 @@ export class Graph1Component {
           }
         }
       }
-      // plotOptions: {
-      //   radialBar: {
-      //     dataLabels: {
-      //       name: {
-      //         fontSize: "22px"
-      //       },
-      //       value: {
-      //         fontSize: "16px"
-      //       },
-      //       total: {
-      //         show: true,
-      //         label: "",
-      //         formatter: () => {
-      //           return "249";
-      //         }
-      //       }
-      //     }
-      //   }
-      //
-      // }
-
     });
+
     chart.render();
     return chart;
   });
-  graph2 = viewChild<HTMLDivElement>('graph2');
+}
 
-  series1 = toSignal(interval(1000).pipe(map((i) => i % 100)), {
-    initialValue: 0
-  });
-  series2 = toSignal(interval(100).pipe(map((i) => i % 100)), {
-    initialValue: 0
-  });
-  series3 = toSignal(interval(100).pipe(map((i) => (50 + (Math.sin(i) * 30)) % 100)), {
-    initialValue: 0
-  });
+@Component({
+  selector: 'app-graph-1',
+  standalone: true,
+  imports: [],
+  templateUrl: './graph-1.component.html',
+  styleUrl: './graph-1.component.scss'
+})
+export class Graph1Component {
+
+  leftGraphASeries = input<Observable<number>[]>([of(0)]);
+  leftGraphBSeries = input<Observable<number>[]>([of(0)]);
+  rightGraphASeries = input<Observable<number>[]>([of(0)]);
+  rightGraphBSeries = input<Observable<number>[]>([of(0)]);
+
+  seriesLeftA = toSignal(watchSeries(this.leftGraphASeries), defaultSeriesSignalData);
+  seriesLeftB = toSignal(watchSeries(this.leftGraphBSeries), defaultSeriesSignalData);
+  seriesRightA = toSignal(watchSeries(this.rightGraphASeries), defaultSeriesSignalData);
+  seriesRightB = toSignal(watchSeries(this.rightGraphBSeries), defaultSeriesSignalData);
+
+
+  graphLeftA = viewChild<ElementRef<HTMLDivElement>>('graphLeftA');
+  graphLeftB = viewChild<ElementRef<HTMLDivElement>>('graphLeftB');
+
+  graphRightA = viewChild<ElementRef<HTMLDivElement>>('graphRightA');
+  graphRightB = viewChild<ElementRef<HTMLDivElement>>('graphRightB');
+
+  graphLeftAChart = toChart(this.graphLeftA);
+  graphLeftBChart = toChart(this.graphLeftB);
+
+  graphRightAChart = toChart(this.graphRightA);
+  graphRightBChart = toChart(this.graphRightB);
+
 
 
   constructor() {
-    effect(() => {
-      const graph = this.graph1Chart();
-      const seriesData = [
-        this.series1(),
-        this.series2(),
-        this.series3()
-      ];
+    const plotSeries = (graph: Signal<ApexCharts|null>, series: Signal<number[]>) => {
+      effect(() => {
+        const chart = graph();
+        const seriesData = series();
 
-      if (!graph) {
-        return;
-      }
+        chart?.updateSeries(seriesData);
+      });
+    };
 
-      // graph.resetSeries();
-      // graph.updateSeries([{
-      //   data: seriesData
-      // }]);
-      graph.updateSeries(seriesData);
+    plotSeries(this.graphLeftAChart, this.seriesLeftA);
+    plotSeries(this.graphLeftBChart, this.seriesLeftB);
+    plotSeries(this.graphRightAChart, this.seriesRightA);
+    plotSeries(this.graphRightBChart, this.seriesRightB);
 
-
-    });
   }
 }
